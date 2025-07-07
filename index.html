@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simple Chatbot</title>
+  <style>
+    body { font-family: Arial, sans-serif; display: flex; justify-content: center; margin-top: 50px; }
+    #chatbox { width: 400px; border: 1px solid #ccc; padding: 10px; height: 500px; overflow-y: scroll; background: #f9f9f9; }
+    .message { margin: 5px 0; padding: 8px; border-radius: 5px; }
+    .user { background-color: #d1e7dd; align-self: flex-end; }
+    .bot { background-color: #f8d7da; }
+    #input { width: 300px; padding: 10px; }
+    #send { padding: 10px 15px; }
+    #input-area { margin-top: 10px; display: flex; }
+  </style>
+</head>
+<body>
+  <div>
+    <div id="chatbox"></div>
+    <div id="input-area">
+      <input type="text" id="input" placeholder="Type your message..." />
+      <button id="send">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const chatbox = document.getElementById('chatbox');
+    const input = document.getElementById('input');
+    const sendBtn = document.getElementById('send');
+
+    function appendMessage(text, className) {
+      const msg = document.createElement('div');
+      msg.className = 'message ' + className;
+      msg.textContent = text;
+      chatbox.appendChild(msg);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const userMessage = input.value.trim();
+      if (!userMessage) return;
+      appendMessage(userMessage, 'user');
+      input.value = '';
+
+      try {
+        const response = await fetch('https://n8n-service-egks.onrender.com/webhook/1eac4c39-e31d-457c-ac70-4f6bd860d81e', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: userMessage })
+        });
+        const data = await response.json();
+        appendMessage(data.reply || 'No reply', 'bot');
+      } catch (err) {
+        appendMessage('Error connecting to server', 'bot');
+      }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') sendMessage();
+    });
+  </script>
+</body>
+</html>
