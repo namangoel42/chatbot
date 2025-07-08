@@ -10,7 +10,7 @@
     .user { background-color: #d1e7dd; align-self: flex-end; white-space: normal; }
     .bot { background-color: #f8d7da; white-space: normal; }
 
-    /* ✅ Allow formatting inside bot messages */
+    /* ✅ Extra styles for markdown formatting */
     .message.bot ul {
       margin: 10px 0;
       padding-left: 20px;
@@ -26,6 +26,20 @@
 
     .message.bot strong {
       font-weight: bold;
+    }
+
+    .message.bot table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .message.bot table, .message.bot th, .message.bot td {
+      border: 1px solid #ccc;
+    }
+
+    .message.bot th, .message.bot td {
+      padding: 5px;
+      text-align: left;
     }
 
     #input { width: 300px; padding: 10px; }
